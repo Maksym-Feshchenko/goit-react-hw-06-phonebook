@@ -4,7 +4,7 @@ import ContactList from './ContactList/ContactList';
 import Filter from './Filters/Filter';
 import { nanoid } from 'nanoid';
 
-const App = () => {
+export const App = () => {
   const [contacts, setContacts] = useState([
     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
@@ -65,4 +65,3 @@ const App = () => {
   );
 };
 
-export default App;
