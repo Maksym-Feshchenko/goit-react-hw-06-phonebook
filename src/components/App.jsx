@@ -1,30 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, removeContact, setFilter } from '../components/redux/contactsSlice';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filters/Filter';
 import { nanoid } from 'nanoid';
 
-export const App = () => {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    const storedContacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(storedContacts);
-
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+const App = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contacts.contacts);
 
   const addNewContact = (name, number) => {
     const newContact = { name, number, id: nanoid() };
@@ -39,19 +22,15 @@ export const App = () => {
       return;
     }
 
-    setContacts([...contacts, newContact]);
+    dispatch(addContact(newContact));
   };
 
-  const searchFilter = (filter) => {
-    setFilter(filter);
+  const removeContactHandler = (id) => {
+    dispatch(removeContact(id));
   };
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  const removeContact = (id) => {
-    setContacts(contacts.filter((contact) => contact.id !== id));
+  const searchFilter = (value) => {
+    dispatch(setFilter(value));
   };
 
   return (
@@ -59,9 +38,10 @@ export const App = () => {
       <h1>Phonebook</h1>
       <ContactForm addNewContact={addNewContact} />
       <h2>Contacts</h2>
-      <Filter searchFilter={searchFilter} />
-      <ContactList contacts={filteredContacts} removeContact={removeContact} />
+      <Filter onChange={searchFilter} />
+      <ContactList contacts={contacts} removeContact={removeContactHandler} />
     </div>
   );
 };
 
+export default App;
