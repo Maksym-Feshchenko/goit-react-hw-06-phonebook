@@ -8,6 +8,9 @@ const contactsSlice = createSlice({
   },
   reducers: {
     addContact: (state, action) => {
+      if (state.contacts === undefined) {
+        state.contacts = [];
+      }
       state.contacts = state.contacts.concat(action.payload);
     },
     removeContact: (state, action) => {
