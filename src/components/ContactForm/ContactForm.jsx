@@ -1,14 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { addContact } from '../redux/contactsSlice';
-import React, { useState } from 'react';
-import { nanoid } from 'nanoid'
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from '../redux/contactSlice';
+// import css from './ContactForm.module.css';
+import { getContacts } from '../redux/selecrors';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     if (e.target.name === 'name') {
       setName(e.target.value);
     } else if (e.target.name === 'number') {
@@ -16,9 +17,17 @@ const ContactForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    dispatch(addContact({ name, number, id: nanoid() }));
+    if (
+      contacts.some(
+        value => value.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+      )
+    ) {
+      alert(`${name} is alredy in contacts`);
+    } else {
+      dispatch(addContact({ name, number }));
+    }
     reset();
   };
 
@@ -26,13 +35,14 @@ const ContactForm = () => {
     setName('');
     setNumber('');
   };
+  const contacts = useSelector(getContacts);
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         Name
         <input
-          placeholder='Enter a name'
+          placeholder="Enter a name"
           value={name}
           type="text"
           name="name"
@@ -45,7 +55,7 @@ const ContactForm = () => {
       <label>
         Number
         <input
-          placeholder='Enter a number'
+          placeholder="Enter a number"
           value={number}
           type="tel"
           name="number"
@@ -55,7 +65,9 @@ const ContactForm = () => {
           onChange={handleChange}
         />
       </label>
-      <button type="submit">Add contact</button>
+      <button type="submit">
+        Add contact
+      </button>
     </form>
   );
 };
