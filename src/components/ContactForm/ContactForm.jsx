@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../redux/contactSlice';
+import { addContact } from '../../redux/contactSlice';
 // import css from './ContactForm.module.css';
-import { getContacts } from '../redux/selecrors';
+import { getContacts } from '../../redux/selecrors';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ const ContactForm = () => {
           value={name}
           type="text"
           name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          pattern="^[A-Za-z\u0080-\uFFFF ']+$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           onChange={handleChange}
@@ -59,7 +59,7 @@ const ContactForm = () => {
           value={number}
           type="tel"
           name="number"
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          pattern="^(\+?[0-9.\(\)\-\s]*)$"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           onChange={handleChange}
